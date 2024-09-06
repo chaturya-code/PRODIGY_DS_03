@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Decision Tree Classifier</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Decision Tree Classifier</h1>
+    
+    <p>Upload a dataset to predict whether a customer will purchase a product or service based on their demographic and behavioral data:</p>
+    
+    <input type="file" id="fileInput" accept=".csv">
+    <button onclick="trainDecisionTree()">Train Decision Tree</button>
+    
+    <div id="result">
+        <h2>Decision Tree Output</h2>
+        <p id="treeOutput">The decision tree result will appear here.</p>
+    </div>
+
+    <script>
+        let data = [];
+        let labels = [];
+
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const csvData = event.target.result;
+                parseCSV(csvData);
+            };
+            reader.readAsText(file);
+        });
+
+        function parseCSV(csvData) {
+            const rows = csvData.split('\n').slice(1);
+            rows.forEach(row => {
+                const values = row.split(',');
+                data.push(values.slice(0, -1).map(Number)); // Convert features to numbers
+                labels.push(values[values.length - 1].trim()); // Target variable
+            });
+        }
+
+        function trainDecisionTree() {
+            if (data.length === 0 || labels.length === 0) {
+                alert('Please upload a dataset first.');
+                return;
+            }
+
+            // Placeholder: Implementing a basic decision tree logic (for illustration purposes)
+            const resultElement = document.getElementById('treeOutput');
+            const featureIndex = 0; // Assume first feature for simplicity
+            const threshold = 0.5; // Arbitrary threshold
+
+            let yesCount = 0;
+            let noCount = 0;
+
+            data.forEach((sample, index) => {
+                if (sample[featureIndex] >= threshold) {
+                    if (labels[index] === 'yes') yesCount++;
+                } else {
+                    if (labels[index] === 'no') noCount++;
+                }
+            });
+
+            resultElement.textContent = `Simple Decision Tree Result: 
+                Yes Count (>= ${threshold}): ${yesCount}, 
+                No Count (< ${threshold}): ${noCount}`;
+        }
+    </script>
+</body>
+</html>
